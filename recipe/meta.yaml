@@ -16,7 +16,9 @@ build:
 requirements:
   host:
     - python
-    - pip
+    - pip >=8.1.0
+    - wheel >=0.25.0
+    - setuptools
     - pandoc
   run:
     - python
@@ -29,10 +31,13 @@ test:
     - python -c "import pypandoc; print(pypandoc.get_pandoc_version())"
 
 about:
-  home: https://github.com/bebraw/pypandoc
+  home: https://github.com/NicklasTegner/pypandoc
   license: MIT
   license_file: LICENSE
+  license_family: MIT
   summary: 'Thin wrapper for "pandoc"'
+  dev_url: https://github.com/NicklasTegner/pypandoc
+  doc_url: https://pypi.org/project/pypandoc/
 
 extra:
   recipe-maintainers:
