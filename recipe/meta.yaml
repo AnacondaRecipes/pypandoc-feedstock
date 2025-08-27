@@ -1,41 +1,59 @@
-{% set version = "1.6.3" %}
+{% set version = "1.15" %}
+{% set name = "pypandoc" %}
 
 package:
-  name: pypandoc
+  name: {{ name }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/p/pypandoc/pypandoc-{{ version }}.tar.gz
-  sha256: 95a331f5ef74adb9557e9961d784c30ba73bd0d62e7736bb5d9ce74888b9f438
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: ea25beebe712ae41d63f7410c08741a3cab0e420f6703f95bc9b3a749192ce13
+  # Tests run from script so cannot be ignored from pytest parameters
+  # Test requires some version of pandoc, but conda has only 2.2 version 
+  # Some tests requires Latex, some requires absent files.
+  patches:
+    - ignore_failed_tests.patch
 
 build:
-  number: 1
-  noarch: python
-  script: python -m pip install --no-deps --ignore-installed .
+  number: 0
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: true  # [py<37]
 
 requirements:
   host:
     - python
     - pip >=8.1.0
+    - poetry-core >=1.0.0
     - wheel >=0.25.0
-    - setuptools
-    - pandoc
   run:
     - python
     - pandoc
 
 test:
+  source_files:
+    - filter_test.md
+    - tests.py
   imports:
     - pypandoc
+  requires:
+    - pip
+    - pandocfilters >=1.5.0,<2.0.0
   commands:
+    - pip check
     - python -c "import pypandoc; print(pypandoc.get_pandoc_version())"
+    - python tests.py
 
 about:
   home: https://github.com/NicklasTegner/pypandoc
   license: MIT
   license_file: LICENSE
   license_family: MIT
-  summary: 'Thin wrapper for "pandoc"'
+  summary: Thin wrapper for "pandoc"
+  description: |
+    Pypandoc uses pandoc, so it needs an available installation of pandoc.
+    Pypandoc provides 2 packages, "pypandoc" and "pypandoc_binary", with
+    the second one including pandoc out of the box. The 2 packages are identical,
+    with the only difference being that one includes pandoc, while the other don't.
   dev_url: https://github.com/NicklasTegner/pypandoc
   doc_url: https://pypi.org/project/pypandoc/
 
