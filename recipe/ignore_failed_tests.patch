@@ -1,5 +1,5 @@
 --- tests.py	2025-01-08 19:32:36
-+++ tests_new.py	2025-08-27 15:27:55
++++ tests.py	2025-08-27 15:27:55
 @@ -194,31 +194,31 @@
              received = pypandoc.convert_file(file_name, 'rst')
              self.assertEqualExceptForNewlineEnd(expected, received)

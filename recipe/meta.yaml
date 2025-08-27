@@ -23,9 +23,7 @@ requirements:
   host:
     - python
     - pip >=8.1.0
-    - pandoc >=2.0
     - poetry-core >=1.0.0
-    - setuptools >=68
     - wheel >=0.25.0
   run:
     - python
@@ -39,7 +37,6 @@ test:
     - pypandoc
   requires:
     - pip
-    - python
     - pandocfilters >=1.5.0,<2.0.0
   commands:
     - pip check
