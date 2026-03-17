@@ -1,4 +1,4 @@
-{% set version = "1.15" %}
+{% set version = "1.17" %}
 {% set name = "pypandoc" %}
 
 package:
@@ -7,9 +7,9 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: ea25beebe712ae41d63f7410c08741a3cab0e420f6703f95bc9b3a749192ce13
+  sha256: 51179abfd6e582a25ed03477541b48836b5bba5a4c3b282a547630793934d799
   # Tests run from script so cannot be ignored from pytest parameters
-  # Test requires some version of pandoc, but conda has only 2.2 version 
+  # Test requires some version of pandoc, but conda has only 2.2 version
   # Some tests requires Latex, some requires absent files.
   patches:
     - ignore_failed_tests.patch
