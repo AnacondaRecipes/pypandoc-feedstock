@@ -61,7 +61,7 @@ about:
     the second one including pandoc out of the box. The 2 packages are identical,
     with the only difference being that one includes pandoc, while the other don't.
   dev_url: https://github.com/NicklasTegner/pypandoc
-  doc_url: https://pypi.org/project/pypandoc/
+  doc_url: https://pypi.org/project/pypandoc
 
 extra:
   recipe-maintainers:
