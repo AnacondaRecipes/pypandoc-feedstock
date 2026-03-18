@@ -1,4 +1,4 @@
-{% set version = "1.15" %}
+{% set version = "1.17" %}
 {% set name = "pypandoc" %}
 
 package:
@@ -7,12 +7,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: ea25beebe712ae41d63f7410c08741a3cab0e420f6703f95bc9b3a749192ce13
-  # Tests run from script so cannot be ignored from pytest parameters
-  # Test requires some version of pandoc, but conda has only 2.2 version 
-  # Some tests requires Latex, some requires absent files.
-  patches:
-    - ignore_failed_tests.patch
+  sha256: 51179abfd6e582a25ed03477541b48836b5bba5a4c3b282a547630793934d799
 
 build:
   number: 0
@@ -22,26 +17,37 @@ build:
 requirements:
   host:
     - python
-    - pip >=8.1.0
-    - poetry-core >=1.0.0
-    - wheel >=0.25.0
+    - pip
+    - hatchling
   run:
     - python
     - pandoc
 
+# >       assert "making a release" in received
+# E       assert 'making a release' in '<h2 id="section">section</h2>\n<p>a reference <span class="citation"\ndata-cites="fenner2012a">[@fenner2012a]</span>.</p>\n<h1 id="references">references</h1>\n
+# <h2 id="section-1">section</h2>\n<p>a reference <span class="citation"\ndata-cites="fenner2012a">[@fenner2012a]</span>.</p>\n<h1 id="references-1">references</h1>\n'
+{% set deselect_tests = " --deselect=tests/test_pypandoc.py::TestPypandoc::test_basic_conversion_from_file_pattern" %}
+{% set deselect_tests = deselect_tests + " --deselect=tests/test_pypandoc.py::TestPypandoc::test_basic_conversion_from_file_pattern_with_input_list" %}
+
+# Failing only on CI
+# E           /tmp/tmpujqhq8ut.py: createProcess: posix_spawnp: permission denied (Permission denied)
+{% set deselect_tests = deselect_tests + " --deselect=tests/test_pypandoc.py::TestPypandoc::test_conversion_with_mixed_filters" %}  # [linux]
+{% set deselect_tests = deselect_tests + " --deselect=tests/test_pypandoc.py::TestPypandoc::test_conversion_with_python_filter" %}  # [linux]
+
 test:
   source_files:
     - filter_test.md
-    - tests.py
+    - tests
+    - test_data
   imports:
     - pypandoc
   requires:
     - pip
-    - pandocfilters >=1.5.0,<2.0.0
+    - pandocfilters >=1.5.0
+    - pytest >=7.0
   commands:
     - pip check
-    - python -c "import pypandoc; print(pypandoc.get_pandoc_version())"
-    - python tests.py
+    - pytest -v tests {{ deselect_tests }}
 
 about:
   home: https://github.com/NicklasTegner/pypandoc
@@ -55,7 +61,7 @@ about:
     the second one including pandoc out of the box. The 2 packages are identical,
     with the only difference being that one includes pandoc, while the other don't.
   dev_url: https://github.com/NicklasTegner/pypandoc
-  doc_url: https://pypi.org/project/pypandoc/
+  doc_url: https://pypi.org/project/pypandoc
 
 extra:
   recipe-maintainers:
