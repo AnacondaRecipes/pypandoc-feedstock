@@ -29,6 +29,11 @@ requirements:
 {% set deselect_tests = " --deselect=tests/test_pypandoc.py::TestPypandoc::test_basic_conversion_from_file_pattern" %}
 {% set deselect_tests = deselect_tests + " --deselect=tests/test_pypandoc.py::TestPypandoc::test_basic_conversion_from_file_pattern_with_input_list" %}
 
+# Failing only on CI
+# E           /tmp/tmpujqhq8ut.py: createProcess: posix_spawnp: permission denied (Permission denied)
+{% set deselect_tests = deselect_tests + " --deselect=tests/test_pypandoc.py::TestPypandoc::test_conversion_with_mixed_filters" %}  # [linux]
+{% set deselect_tests = deselect_tests + " --deselect=tests/test_pypandoc.py::TestPypandoc::test_conversion_with_python_filter" %}  # [linux]
+
 test:
   source_files:
     - filter_test.md
